@@ -3,17 +3,32 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
+enum GameState{
+    PlayerTurn,
+    PlayerMove,
+    EnemyTurn,
+    EnemyMove,
+}
 public class MovementControls : MonoBehaviour
 {
+    GameState gameState = GameState.PlayerTurn;
     [SerializeField]
     private bool isMoving = true;
     public float speed = 1f;
     int distanceMoved = 0;
     Vector3 velocity = new Vector3();
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        if(gameState == GameState.PlayerTurn)
+        {
+            /*Process playerturn*/
+            if(Input.GetKeyUp(KeyCode.LeftShift)){
+                gameState = GameState.PlayerMove;
+            }
+        } 
+        else if(gameState == GameState.PlayerMove){}
     }
 
     // Update is called once per frame
@@ -26,7 +41,7 @@ public class MovementControls : MonoBehaviour
             else{
                 try
                 {
-                    Thread.Sleep((int)(62.5-(Time.deltaTime/1000)));
+
                 }
                 catch
                 {
