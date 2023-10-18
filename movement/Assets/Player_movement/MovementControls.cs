@@ -1,80 +1,78 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using UnityEditor.Rendering;
 using UnityEngine;
 
-enum GameState{
-    PlayerTurn,
-    PlayerMove,
-    EnemyTurn,
-    EnemyMove,
-}
+
 public class MovementControls : MonoBehaviour
 {
-    GameState gameState = GameState.PlayerTurn;
     [SerializeField]
-    private bool isMoving = true;
+    public LayerMask stopWall;
+    private float time = 0.5f;
+    private float timer = 0f;
     public float speed = 1f;
     int distanceMoved = 0;
     Vector3 velocity = new Vector3();
+    GameManager gameManager;
 
     // Start is called before the first frame update
     void Start()
     {
-        if(gameState == GameState.PlayerTurn)
-        {
-            /*Process playerturn*/
-            if(Input.GetKeyUp(KeyCode.LeftShift)){
-                gameState = GameState.PlayerMove;
-            }
-        } 
-        else if(gameState == GameState.PlayerMove){}
+        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+
     }
 
     // Update is called once per frame
     private void Update() {
-        if(isMoving){
+        if(gameManager.gameState == GameState.PlayerTurn)
+        {
+            /*Process playerturn*/
+            if (Input.GetKeyDown(KeyCode.W) ){
+                gameManager.UpdateGameState(GameState.PlayerMove);
+                velocity = new Vector3(0, speed);
+            }
+            if (Input.GetKeyDown(KeyCode.S) ){
+                gameManager.UpdateGameState(GameState.PlayerMove);
+
+                velocity = new Vector3(0, -speed);
+            }
+                        if (Input.GetKeyDown(KeyCode.A) ){
+                gameManager.UpdateGameState(GameState.PlayerMove);
+
+                velocity = new Vector3(-speed, 0);
+            }
+            if (Input.GetKeyDown(KeyCode.D)){
+                gameManager.UpdateGameState(GameState.PlayerMove);
+
+                velocity = new Vector3(speed, 0);
+            }
+        }
+        else if(gameManager.gameState== GameState.PlayerMove){
             if(distanceMoved == 16){
-                isMoving = false;
+                gameManager.UpdateGameState(GameState.EnemyTurn);
                 distanceMoved = 0;
             }
             else{
-                try
-                {
-
-                }
-                catch
-                {
-                }
-                transform.position += velocity * 0.0625f;
+                transform.position += velocity * 1/16f;
                 distanceMoved++;
             }
-        }
-        else{
-
-            if (Input.GetKeyDown(KeyCode.W) ){
-                isMoving = true;
-
-               velocity = new Vector3(0, speed);
-            }
-            if (Input.GetKeyDown(KeyCode.S) ){
-                isMoving = true;
-
-               velocity = new Vector3(0, -speed);
-            }
-            if (Input.GetKeyDown(KeyCode.A) ){
-                isMoving = true;
-
-               velocity = new Vector3(-speed, 0);
-            }
-            if (Input.GetKeyDown(KeyCode.D)){
-                isMoving = true;
-
-               velocity = new Vector3(speed, 0);
-
-            }
-
         }
     }
 
 }
+/*        else if(gameManager.gameState== GameState.PlayerMove){
+            if(distanceMoved == 18){
+                if(transform.position.y > 0 && transform.position.x > 0){
+                    transform.position = new Vector3(Mathf.Round(transform.position.x) - 0.5f, Mathf.Round(transform.position.y) - 0.5f, 0f);
+                }
+                gameManager.UpdateGameState(GameState.EnemyTurn);
+                distanceMoved = 0;
+            }
+            else if(distanceMoved != 16){
+                transform.position += velocity * 1/16f;
+                distanceMoved++;
+            }
+            else if(distanceMoved != 18 && distanceMoved >= 16){
+                distanceMoved++;
+            }*/
