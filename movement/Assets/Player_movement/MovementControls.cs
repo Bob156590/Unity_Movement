@@ -15,6 +15,7 @@ public class MovementControls : MonoBehaviour
     int distanceMoved = 0;
     Vector3 velocity = new Vector3();
     GameManager gameManager;
+    Vector3 lastPos;
 
     // Start is called before the first frame update
     void Start()
@@ -47,6 +48,7 @@ public class MovementControls : MonoBehaviour
 
                 velocity = new Vector3(speed, 0);
             }
+            lastPos = transform.position;
         }
         else if(gameManager.gameState== GameState.PlayerMove){
             if(distanceMoved == 16){
@@ -58,6 +60,10 @@ public class MovementControls : MonoBehaviour
                 distanceMoved++;
             }
         }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other) {
+        transform.position = lastPos;
     }
 
 }
