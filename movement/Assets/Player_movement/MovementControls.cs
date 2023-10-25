@@ -13,6 +13,8 @@ public class MovementControls : MonoBehaviour
     private float timer = 0f;
     public float speed = 1f;
     int distanceMoved = 0;
+    public int moved = 0;
+    private int maxMovement = 2;
     Vector3 velocity = new Vector3();
     GameManager gameManager;
     Vector3 lastPos;
@@ -38,7 +40,7 @@ public class MovementControls : MonoBehaviour
 
                 velocity = new Vector3(0, -speed);
             }
-                        if (Input.GetKeyDown(KeyCode.A) ){
+            if (Input.GetKeyDown(KeyCode.A) ){
                 gameManager.UpdateGameState(GameState.PlayerMove);
 
                 velocity = new Vector3(-speed, 0);
@@ -51,13 +53,22 @@ public class MovementControls : MonoBehaviour
             lastPos = transform.position;
         }
         else if(gameManager.gameState== GameState.PlayerMove){
-            if(distanceMoved == 16){
-                gameManager.UpdateGameState(GameState.EnemyTurn);
-                distanceMoved = 0;
+            if (moved != maxMovement){
+                if(distanceMoved == 16){
+                    distanceMoved = 0;
+                    moved++;
+                }
+                else{
+                    transform.position += velocity * 1/16f;
+                    distanceMoved++;
+                }
             }
-            else{
-                transform.position += velocity * 1/16f;
-                distanceMoved++;
+            if (moved == maxMovement){
+                gameManager.UpdateGameState(GameState.EnemyTurn);
+                moved -= moved;
+            }
+            if(distanceMoved == 0 && moved != 0){
+                gameManager.UpdateGameState(GameState.PlayerTurn);
             }
         }
     }
