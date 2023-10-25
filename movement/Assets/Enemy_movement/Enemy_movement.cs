@@ -14,11 +14,12 @@ public class Enemy_movement : MonoBehaviour
     public float speed = 3f;
     Vector3 pteradactyl;
     GameManager gameManager;
-    // Update is called once per frame
+    private int enemyPos;
     void Start(){
         player = GameObject.FindWithTag("Player").GetComponent<Transform>();
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
-
+        enemyPos = MovementControls.enemyMoved.Count;
+        MovementControls.enemyMoved.Add(false);
     }
 
     void Update() {
@@ -36,12 +37,12 @@ public class Enemy_movement : MonoBehaviour
                 pteradactyl = new Vector3(0, -(transform.position.y - player.position.y)/Math.Abs(transform.position.y - player.position.y));
                 gameManager.UpdateGameState(GameState.EnemyMove);                
             }
-            else gameManager.UpdateGameState(GameState.PlayerTurn);
         }
         else if(gameManager.gameState == GameState.EnemyMove){
             if(distanceMoved == 16){
-                gameManager.UpdateGameState(GameState.PlayerTurn);
                 distanceMoved = 0;
+                MovementControls.enemyMoved[enemyPos] = true;
+                if(!MovementControls.enemyMoved.Contains(false)){ gameManager.UpdateGameState(GameState.PlayerTurn);}
             }
             else{
                 transform.position += pteradactyl * 1/16f;

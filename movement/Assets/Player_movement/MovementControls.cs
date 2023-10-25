@@ -15,6 +15,7 @@ public class MovementControls : MonoBehaviour
     int distanceMoved = 0;
     public int moved = 0;
     private int maxMovement = 2;
+    public static List<bool> enemyMoved = new List<bool>();
     Vector3 velocity = new Vector3();
     GameManager gameManager;
     Vector3 lastPos;
