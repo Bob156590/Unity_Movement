@@ -25,6 +25,7 @@ public class FightManager : MonoBehaviour
             Destroy(player);
         }
         if(eHP == 0){
+            
             Destroy(enemy);
         }
     }

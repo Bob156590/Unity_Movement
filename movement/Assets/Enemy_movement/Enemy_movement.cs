@@ -15,11 +15,12 @@ public class Enemy_movement : MonoBehaviour
     Vector3 pteradactyl;
     GameManager gameManager;
     private int enemyPos;
+
     void Start(){
         player = GameObject.FindWithTag("Player").GetComponent<Transform>();
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
-        enemyPos = MovementControls.enemyMoved.Count;
-        MovementControls.enemyMoved.Add(false);
+        enemyPos = EnemiesManager.enemyMoved.Count;
+        EnemiesManager.enemyMoved.Add(false);
     }
 
     void Update() {
@@ -41,13 +42,17 @@ public class Enemy_movement : MonoBehaviour
         else if(gameManager.gameState == GameState.EnemyMove){
             if(distanceMoved == 16){
                 distanceMoved = 0;
-                MovementControls.enemyMoved[enemyPos] = true;
-                if(!MovementControls.enemyMoved.Contains(false)){ gameManager.UpdateGameState(GameState.PlayerTurn);}
+                EnemiesManager.enemyMoved[enemyPos] = true;
+                EnemiesManager.SetState();
             }
             else{
                 transform.position += pteradactyl * 1/16f;
                 distanceMoved++;
             }
         }
+    }
+    private void OnDestroy() 
+    {
+        EnemiesManager.enemyMoved[enemyPos] = null;
     }
 }
