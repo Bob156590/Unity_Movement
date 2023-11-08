@@ -15,6 +15,7 @@ public class Enemy_movement : MonoBehaviour
     Vector3 pteradactyl;
     GameManager gameManager;
     private int enemyPos;
+    
 
     void Start(){
         player = GameObject.FindWithTag("Player").GetComponent<Transform>();
